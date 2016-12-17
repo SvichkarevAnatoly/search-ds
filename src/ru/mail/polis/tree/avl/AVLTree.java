@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 public class AVLTree<E extends Comparable<E>> implements ISortedSet<E> {
-    private Node root;
+    Node root;
     private int size;
     private final Comparator<E> comparator;
 
@@ -186,10 +186,16 @@ public class AVLTree<E extends Comparable<E>> implements ISortedSet<E> {
     class Node {
         E value;
         Node left, right;
-        int height;
+        int height = 1;
 
         Node(E value) {
             this.value = value;
+        }
+
+        Node(E value, Node left, Node right) {
+            this.value = value;
+            this.left = left;
+            this.right = right;
         }
 
         @Override

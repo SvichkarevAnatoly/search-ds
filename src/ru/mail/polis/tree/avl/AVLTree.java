@@ -7,9 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-//TODO: write code here
 public class AVLTree<E extends Comparable<E>> implements ISortedSet<E> {
-
     private Node root;
     private int size;
     private final Comparator<E> comparator;
@@ -74,7 +72,22 @@ public class AVLTree<E extends Comparable<E>> implements ISortedSet<E> {
 
     @Override
     public boolean contains(E value) {
-        // TODO: 17.12.16
+        if (value == null) {
+            throw new NullPointerException("value is null");
+        }
+        if (root != null) {
+            Node curr = root;
+            while (curr != null) {
+                int cmp = compare(curr.value, value);
+                if (cmp == 0) {
+                    return true;
+                } else if (cmp < 0) {
+                    curr = curr.right;
+                } else {
+                    curr = curr.left;
+                }
+            }
+        }
         return false;
     }
 

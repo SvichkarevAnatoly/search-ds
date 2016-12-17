@@ -2,13 +2,15 @@ package ru.mail.polis.tree.avl;
 
 import ru.mail.polis.ISortedSet;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 //TODO: write code here
 public class AVLTree<E extends Comparable<E>> implements ISortedSet<E> {
 
-//    private Node root;
+    private Node root;
     private int size;
     private final Comparator<E> comparator;
 
@@ -22,42 +24,99 @@ public class AVLTree<E extends Comparable<E>> implements ISortedSet<E> {
 
     @Override
     public E first() {
-        return null;
+        if (isEmpty()) {
+            throw new NoSuchElementException("set is empty, no first element");
+        }
+        Node curr = root;
+        while (curr.left != null) {
+            curr = curr.left;
+        }
+        return curr.value;
     }
 
     @Override
     public E last() {
-        return null;
+        if (isEmpty()) {
+            throw new NoSuchElementException("set is empty, no last element");
+        }
+        Node curr = root;
+        while (curr.right != null) {
+            curr = curr.right;
+        }
+        return curr.value;
     }
 
     @Override
     public List<E> inorderTraverse() {
-        return null;
+        List<E> list = new ArrayList<E>(size);
+        inorderTraverse(root, list);
+        return list;
+    }
+
+    private void inorderTraverse(Node curr, List<E> list) {
+        if (curr == null) {
+            return;
+        }
+        inorderTraverse(curr.left, list);
+        list.add(curr.value);
+        inorderTraverse(curr.right, list);
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return root == null;
     }
 
     @Override
     public boolean contains(E value) {
+        // TODO: 17.12.16
         return false;
     }
 
     @Override
     public boolean add(E value) {
+        // TODO: 17.12.16
         return false;
     }
 
     @Override
     public boolean remove(E value) {
+        // TODO: 17.12.16
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return "BST{" + root + "}";
+    }
+
+    class Node {
+        Node(E value) {
+            this.value = value;
+        }
+
+        E value;
+        Node left;
+        Node right;
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("N{");
+            sb.append("d=").append(value);
+            if (left != null) {
+                sb.append(", l=").append(left);
+            }
+            if (right != null) {
+                sb.append(", r=").append(right);
+            }
+            sb.append('}');
+            return sb.toString();
+        }
     }
 
     private int compare(E v1, E v2) {

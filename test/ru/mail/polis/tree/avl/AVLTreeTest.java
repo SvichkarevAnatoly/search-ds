@@ -42,7 +42,7 @@ public class AVLTreeTest {
         assertThat(tree.first(), is(SOME_NODE));
         assertThat(tree.last(), is(SOME_NODE));
 
-        // assertThat(tree.remove(SOME_NODE), is(true));
+        // assertThat(tree.delete(SOME_NODE), is(true));
     }
 
     @Test
@@ -99,5 +99,70 @@ public class AVLTreeTest {
         }
         assertThat(tree.contains(0), is(false));
         assertThat(tree.contains(5), is(false));
+    }
+
+    @Test
+    public void deleteOneNodeTree() throws Exception {
+        final AVLTree<Integer> tree = new AVLTree<>();
+        tree.add(SOME_NODE);
+        assertThat(tree.contains(SOME_NODE), is(true));
+        assertThat(tree.remove(SOME_NODE), is(true));
+        assertThat(tree.contains(SOME_NODE), is(false));
+        assertThat(tree.remove(SOME_NODE), is(false));
+    }
+
+    @Test
+    public void deleteTwoNodeTree() throws Exception {
+        String treeString = "1 -1 2 -1 -1";
+        final AVLTree<Integer> tree = AvlBuilder.deserialize(treeString);
+
+        assertThat(tree.contains(2), is(true));
+        assertThat(tree.remove(2), is(true));
+        assertThat(tree.contains(2), is(false));
+        assertThat(tree.contains(1), is(true));
+    }
+
+    @Test
+    public void deleteRootInBigTree() throws Exception {
+        final String treeString = "10 5 3 -1 -1 7 -1 -1 20 15 12 -1 -1 17 -1 -1 25 -1 -1";
+        final AVLTree<Integer> tree = AvlBuilder.deserialize(treeString);
+
+        assertThat(tree.remove(10), is(true));
+
+        final String expectedTreeString= "12 5 3 -1 -1 7 -1 -1 20 15 -1 17 -1 -1 25 -1 -1";
+        assertThat(AvlBuilder.serialize(tree), is(expectedTreeString));
+    }
+
+    @Test
+    public void deleteRootLeftChildInBigTree() throws Exception {
+        final AVLTree<Integer> tree = new AVLTree<>();
+        for (int i = 2; i <= 10; i++) {
+            assertThat(tree.add(i), is(true));
+        }
+
+        assertThat(tree.contains(7), is(true));
+        assertThat(tree.remove(7), is(true));
+        assertThat(tree.contains(7), is(false));
+
+        assertThat(AvlBuilder.serialize(tree), is("5 3 2 -1 -1 4 -1 -1 8 6 -1 -1 9 -1 10 -1 -1"));
+    }
+
+    @Test
+    public void add10Delete10() throws Exception {
+        final AVLTree<Integer> tree = new AVLTree<>();
+        for (int i = 1; i <= 10; i++) {
+            assertThat(tree.add(i), is(true));
+        }
+
+        for (int i = 1; i <= 10; i++) {
+            assertThat(tree.contains(i), is(true));
+        }
+
+        for (int i = 1; i <= 10; i++) {
+            assertThat(tree.remove(i), is(true));
+            assertThat(tree.contains(i), is(false));
+        }
+
+        assertThat(AvlBuilder.serialize(tree), is("-1"));
     }
 }

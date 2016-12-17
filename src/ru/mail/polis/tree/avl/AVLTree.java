@@ -1,5 +1,6 @@
 package ru.mail.polis.tree.avl;
 
+import org.apache.commons.lang3.mutable.MutableBoolean;
 import ru.mail.polis.ISortedSet;
 
 import java.util.ArrayList;
@@ -101,8 +102,9 @@ public class AVLTree<E extends Comparable<E>> implements ISortedSet<E> {
 
     @Override
     public boolean remove(E value) {
-        // TODO: 17.12.16
-        return false;
+        final MutableBoolean isDeleted = new MutableBoolean(false);
+        root = delete(root, value, isDeleted);
+        return isDeleted.getValue();
     }
 
     @Override
@@ -123,6 +125,7 @@ public class AVLTree<E extends Comparable<E>> implements ISortedSet<E> {
         inorderTraverse(curr.right, list);
     }
 
+    // TODO: 17.12.16
     boolean insert(Node node, E value) {
         boolean isInserted;
         int cmp = compare(value, node.value);
@@ -146,6 +149,46 @@ public class AVLTree<E extends Comparable<E>> implements ISortedSet<E> {
             }
         }
         return isInserted;
+    }
+
+    Node delete(Node p, E value, MutableBoolean isDeleted) {
+        if (p == null) {
+            return null;
+        }
+
+        int cmp = compare(value, p.value);
+        if (cmp < 0) {
+            p.left = delete(p.left, value, isDeleted);
+        } else if (cmp > 0) {
+            p.right = delete(p.right, value, isDeleted);
+        } else {
+            isDeleted.setTrue();
+            Node q = p.left;
+            Node r = p.right;
+            if (r == null) {
+                return q;
+            }
+            Node min = findMin(r);
+            min.right = deleteMin(r);
+            min.left = q;
+            return balance(min);
+        }
+        return balance(p);
+    }
+
+    Node findMin(Node p) {
+        if (p.left != null) {
+            return findMin(p.left);
+        }
+        return p;
+    }
+
+    Node deleteMin(Node p) {
+        if (p.left == null) {
+            return p.right;
+        }
+        p.left = deleteMin(p.left);
+        return balance(p);
     }
 
     Node balance(Node p) {
@@ -196,6 +239,7 @@ public class AVLTree<E extends Comparable<E>> implements ISortedSet<E> {
             this.value = value;
             this.left = left;
             this.right = right;
+            fixHeight();
         }
 
         @Override

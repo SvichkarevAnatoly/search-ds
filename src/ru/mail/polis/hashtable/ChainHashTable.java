@@ -1,4 +1,6 @@
-package ru.mail.polis;
+package ru.mail.polis.hashtable;
+
+import ru.mail.polis.ISet;
 
 import java.util.ArrayList;
 import java.util.Comparator;

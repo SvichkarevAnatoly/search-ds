@@ -1,4 +1,6 @@
-package ru.mail.polis;
+package ru.mail.polis.tree;
+
+import ru.mail.polis.ISortedSet;
 
 import java.util.ArrayList;
 import java.util.Comparator;

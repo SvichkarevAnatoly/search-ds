@@ -51,15 +51,6 @@ public class AVLTree<E extends Comparable<E>> implements ISortedSet<E> {
         return list;
     }
 
-    private void inorderTraverse(Node curr, List<E> list) {
-        if (curr == null) {
-            return;
-        }
-        inorderTraverse(curr.left, list);
-        list.add(curr.value);
-        inorderTraverse(curr.right, list);
-    }
-
     @Override
     public int size() {
         return size;
@@ -93,8 +84,19 @@ public class AVLTree<E extends Comparable<E>> implements ISortedSet<E> {
 
     @Override
     public boolean add(E value) {
-        // TODO: 17.12.16
-        return false;
+        if (value == null) {
+            throw new NullPointerException("value is null");
+        }
+        if (root == null) {
+            root = new Node(value);
+            size++;
+            return true;
+        } else {
+            boolean isInserted = insert(root, value);
+            root = balance(root);
+            size += isInserted ? 1 : 0;
+            return isInserted;
+        }
     }
 
     @Override
@@ -105,17 +107,90 @@ public class AVLTree<E extends Comparable<E>> implements ISortedSet<E> {
 
     @Override
     public String toString() {
-        return "BST{" + root + "}";
+        return "AVL{" + root + "}";
+    }
+
+    private int compare(E v1, E v2) {
+        return comparator == null ? v1.compareTo(v2) : comparator.compare(v1, v2);
+    }
+
+    private void inorderTraverse(Node curr, List<E> list) {
+        if (curr == null) {
+            return;
+        }
+        inorderTraverse(curr.left, list);
+        list.add(curr.value);
+        inorderTraverse(curr.right, list);
+    }
+
+    boolean insert(Node node, E value) {
+        boolean isInserted;
+        int cmp = compare(value, node.value);
+        if (cmp == 0) {
+            return false;
+        } else if (cmp < 0) {
+            if (node.left != null) {
+                isInserted = insert(node.left, value);
+                node.left = balance(node.left);
+            } else {
+                node.left = new Node(value);
+                return true;
+            }
+        } else {
+            if (node.right != null) {
+                isInserted = insert(node.right, value);
+                node.right = balance(node.right);
+            } else {
+                node.right = new Node(value);
+                return true;
+            }
+        }
+        return isInserted;
+    }
+
+    Node balance(Node p) {
+        p.fixHeight();
+        if (p.balanceFactor() == 2) {
+            if (p.right.balanceFactor() < 0) {
+                p.right = rotateRight(p.right);
+            }
+            return rotateLeft(p);
+        }
+        if (p.balanceFactor() == -2) {
+            if (p.left.balanceFactor() > 0) {
+                p.left = rotateLeft(p.left);
+            }
+            return rotateRight(p);
+        }
+        return p;
+    }
+
+    Node rotateLeft(Node q) {
+        final Node p = q.right;
+        q.right = p.left;
+        p.left = q;
+        q.fixHeight();
+        p.fixHeight();
+        return p;
+    }
+
+    Node rotateRight(Node p) {
+        final Node q = p.left;
+        p.left = q.right;
+        q.right = p;
+        p.fixHeight();
+        q.fixHeight();
+        return q;
     }
 
     class Node {
+        E value;
+        Node left, right;
+        int height;
+
         Node(E value) {
             this.value = value;
         }
-
-        E value;
-        Node left;
-        Node right;
 
         @Override
         public String toString() {
@@ -130,9 +205,17 @@ public class AVLTree<E extends Comparable<E>> implements ISortedSet<E> {
             sb.append('}');
             return sb.toString();
         }
-    }
 
-    private int compare(E v1, E v2) {
-        return comparator == null ? v1.compareTo(v2) : comparator.compare(v1, v2);
+        int balanceFactor() {
+            final int hl = left != null ? left.height : 0;
+            final int hr = right != null ? right.height : 0;
+            return hr - hl;
+        }
+
+        void fixHeight() {
+            final int hl = left != null ? left.height : 0;
+            final int hr = right != null ? right.height : 0;
+            height = Math.max(hl, hr) + 1;
+        }
     }
 }

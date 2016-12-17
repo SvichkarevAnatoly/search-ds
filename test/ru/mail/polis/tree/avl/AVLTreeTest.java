@@ -17,7 +17,7 @@ public class AVLTreeTest {
 
         assertThat(tree.isEmpty(), is(true));
         assertThat(tree.size(), is(0));
-        assertThat(tree.toString(), is("BST{null}"));
+        assertThat(tree.toString(), is("AVL{null}"));
 
         assertThat(tree.remove(SOME_NODE), is(false));
         assertThat(tree.contains(SOME_NODE), is(false));
@@ -27,5 +27,21 @@ public class AVLTreeTest {
 
         exception = expectThrows(NoSuchElementException.class, tree::last);
         assertThat(exception.getMessage(), is("set is empty, no last element"));
+    }
+
+    @Test
+    void addNode() {
+        final AVLTree<Integer> tree = new AVLTree<>();
+        tree.add(SOME_NODE);
+
+        assertThat(tree.isEmpty(), is(false));
+        assertThat(tree.size(), is(1));
+        assertThat(tree.toString(), is("AVL{N{d=" + SOME_NODE + "}}"));
+
+        assertThat(tree.contains(SOME_NODE), is(true));
+        assertThat(tree.first(), is(SOME_NODE));
+        assertThat(tree.last(), is(SOME_NODE));
+
+        // assertThat(tree.remove(SOME_NODE), is(true));
     }
 }

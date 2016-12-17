@@ -47,7 +47,7 @@ public class AVLTree<E extends Comparable<E>> implements ISortedSet<E> {
 
     @Override
     public List<E> inorderTraverse() {
-        List<E> list = new ArrayList<E>(size);
+        List<E> list = new ArrayList<>(size);
         inorderTraverse(root, list);
         return list;
     }
@@ -125,8 +125,7 @@ public class AVLTree<E extends Comparable<E>> implements ISortedSet<E> {
         inorderTraverse(curr.right, list);
     }
 
-    // TODO: 17.12.16
-    boolean insert(Node node, E value) {
+    private boolean insert(Node node, E value) {
         boolean isInserted;
         int cmp = compare(value, node.value);
         if (cmp == 0) {
@@ -151,7 +150,7 @@ public class AVLTree<E extends Comparable<E>> implements ISortedSet<E> {
         return isInserted;
     }
 
-    Node delete(Node p, E value, MutableBoolean isDeleted) {
+    private Node delete(Node p, E value, MutableBoolean isDeleted) {
         if (p == null) {
             return null;
         }
@@ -176,14 +175,14 @@ public class AVLTree<E extends Comparable<E>> implements ISortedSet<E> {
         return balance(p);
     }
 
-    Node findMin(Node p) {
+    private Node findMin(Node p) {
         if (p.left != null) {
             return findMin(p.left);
         }
         return p;
     }
 
-    Node deleteMin(Node p) {
+    private Node deleteMin(Node p) {
         if (p.left == null) {
             return p.right;
         }
@@ -191,7 +190,7 @@ public class AVLTree<E extends Comparable<E>> implements ISortedSet<E> {
         return balance(p);
     }
 
-    Node balance(Node p) {
+    private Node balance(Node p) {
         p.fixHeight();
         if (p.balanceFactor() == 2) {
             if (p.right.balanceFactor() < 0) {
@@ -208,7 +207,7 @@ public class AVLTree<E extends Comparable<E>> implements ISortedSet<E> {
         return p;
     }
 
-    Node rotateLeft(Node q) {
+    private Node rotateLeft(Node q) {
         final Node p = q.right;
         q.right = p.left;
         p.left = q;
@@ -217,7 +216,7 @@ public class AVLTree<E extends Comparable<E>> implements ISortedSet<E> {
         return p;
     }
 
-    Node rotateRight(Node p) {
+    private Node rotateRight(Node p) {
         final Node q = p.left;
         p.left = q.right;
         q.right = p;

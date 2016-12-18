@@ -1,6 +1,6 @@
 package ru.mail.polis.hashtable;
 
-public class HashArray<E> {
+class HashArray<E> {
     int capacity;
 
     private E[] elementArray;
@@ -29,7 +29,7 @@ public class HashArray<E> {
         return elementArray[pos] == null || isDeleteArray[pos];
     }
 
-    public void delete(int pos) {
+    void delete(int pos) {
         isDeleteArray[pos] = true;
     }
 

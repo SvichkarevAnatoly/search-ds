@@ -165,44 +165,47 @@ public class OpenHashTableTest {
     }
 
     @Test
-    void add8Chars() {
+    void resize() {
         final OpenHashTable<String> table = new OpenHashTable<>();
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 4; i++) {
             final char charValue= (char) ('a' + i);
             assertThat(table.add(String.valueOf(charValue)), is(true));
         }
         assertThat(table.toString(), is(
                 "OpenHashTable{\n"
-                        + "\t0 h\n"
+                        + "\t0 free\n"
                         + "\t1 a\n"
                         + "\t2 b\n"
                         + "\t3 c\n"
                         + "\t4 d\n"
-                        + "\t5 e\n"
-                        + "\t6 f\n"
-                        + "\t7 g\n"
+                        + "\t5 free\n"
+                        + "\t6 free\n"
+                        + "\t7 free\n"
+                        + "\t8 free\n"
+                        + "\t9 free\n"
+                        + "\t10 free\n"
+                        + "\t11 free\n"
+                        + "\t12 free\n"
+                        + "\t13 free\n"
+                        + "\t14 free\n"
+                        + "\t15 free\n"
                         + "}"
         ));
     }
 
     @Test
-    void add9Chars() {
+    void add3andRemoveAll() {
         final OpenHashTable<String> table = new OpenHashTable<>();
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 3; i++) {
             final char charValue= (char) ('a' + i);
             assertThat(table.add(String.valueOf(charValue)), is(true));
         }
-        assertThat(table.toString(), is(
-                "OpenHashTable{\n"
-                        + "\t0 h\n"
-                        + "\t1 a\n"
-                        + "\t2 b\n"
-                        + "\t3 c\n"
-                        + "\t4 d\n"
-                        + "\t5 e\n"
-                        + "\t6 f\n"
-                        + "\t7 g\n"
-                        + "}"
-        ));
+        assertThat(table.size(), is(3));
+        for (int i = 0; i < 3; i++) {
+            final char charValue= (char) ('a' + i);
+            assertThat(table.remove(String.valueOf(charValue)), is(true));
+        }
+        assertThat(table.size(), is(0));
+        assertThat(table.isEmpty(), is(true));
     }
 }

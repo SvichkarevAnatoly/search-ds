@@ -63,6 +63,7 @@ public class OpenHashTable<E extends Comparable<E>> implements ISet<E> {
             if (arr.isFree(i)) {
                 arr.set(value, h);
                 size++;
+                resize();
                 return true;
             }
             h = (h + h2) % arr.capacity;
@@ -122,6 +123,22 @@ public class OpenHashTable<E extends Comparable<E>> implements ISet<E> {
     private void checkValue(E value) {
         if (value == null) {
             throw new NullPointerException("value is null");
+        }
+    }
+
+    private void resize() {
+        if (size < arr.capacity * LOAD_FACTOR) {
+            return;
+        }
+
+        final HashArray<E> oldArr = arr;
+        size = 0;
+        arr = new HashArray<>(2 * INITIAL_CAPACITY);
+        for (int i = 0; i < oldArr.capacity; i++) {
+            if (!oldArr.isFree(i)) {
+                final E value = oldArr.get(i);
+                add(value);
+            }
         }
     }
 }

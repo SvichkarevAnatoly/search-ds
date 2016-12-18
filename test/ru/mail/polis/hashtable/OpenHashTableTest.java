@@ -29,6 +29,15 @@ public class OpenHashTableTest {
     }
 
     @Test
+    void sizeAfterRemove() {
+        final OpenHashTable<String> table = new OpenHashTable<>();
+        assertThat(table.add(SOME_VALUE), is(true));
+        assertThat(table.size(), is(1));
+        assertThat(table.remove(SOME_VALUE), is(true));
+        assertThat(table.size(), is(0));
+    }
+
+    @Test
     void isEmpty() {
         final OpenHashTable<String> table = new OpenHashTable<>();
         assertThat(table.isEmpty(), is(true));

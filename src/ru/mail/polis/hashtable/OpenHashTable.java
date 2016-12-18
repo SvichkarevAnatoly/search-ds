@@ -85,6 +85,7 @@ public class OpenHashTable<E extends Comparable<E>> implements ISet<E> {
                 final int cmp = compare(value, v2);
                 if (cmp == 0) {
                     arr.delete(h);
+                    size--;
                     return true;
                 }
                 h = (h + h2) % arr.capacity;

@@ -1,9 +1,11 @@
 package ru.mail.polis.hashtable;
 
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.expectThrows;
 
 public class OpenHashTableTest {
     private static final String SOME_VALUE = "a";
@@ -31,6 +33,30 @@ public class OpenHashTableTest {
         assertThat(table.isEmpty(), is(true));
         assertThat(table.add(SOME_VALUE), is(true));
         assertThat(table.isEmpty(), is(false));
+    }
+
+    @Test
+    void contains() {
+        final OpenHashTable<String> table = new OpenHashTable<>();
+        assertThat(table.contains(SOME_VALUE), is(false));
+        assertThat(table.add(SOME_VALUE), is(true));
+        assertThat(table.contains(SOME_VALUE), is(true));
+    }
+
+    @Ignore // TODO: 18.12.16
+    @Test
+    void containsLookSecondPosition() {
+        final OpenHashTable<String> table = new OpenHashTable<>();
+        assertThat(table.contains(SOME_VALUE), is(false));
+        assertThat(table.add(SOME_VALUE), is(true));
+        assertThat(table.contains(SOME_VALUE), is(true));
+    }
+
+    @Test
+    void containsNullValue() {
+        final OpenHashTable<String> table = new OpenHashTable<>();
+        Throwable exception = expectThrows(NullPointerException.class, () -> table.contains(null));
+        assertThat(exception.getMessage(), is("value is null"));
     }
 
     @Test

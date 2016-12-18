@@ -43,6 +43,7 @@ public class OpenHashTable<E extends Comparable<E>> implements ISet<E> {
         for (int i = 0; i < array.capacity; i++) {
             if (array.isFree(i)) {
                 array.set(value, h);
+                size++;
                 return true;
             }
             h = (h + h2) % array.capacity;

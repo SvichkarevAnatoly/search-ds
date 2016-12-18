@@ -18,6 +18,22 @@ public class OpenHashTableTest {
     }
 
     @Test
+    void size() {
+        final OpenHashTable<String> table = new OpenHashTable<>();
+        assertThat(table.size(), is(0));
+        assertThat(table.add(SOME_VALUE), is(true));
+        assertThat(table.size(), is(1));
+    }
+
+    @Test
+    void isEmpty() {
+        final OpenHashTable<String> table = new OpenHashTable<>();
+        assertThat(table.isEmpty(), is(true));
+        assertThat(table.add(SOME_VALUE), is(true));
+        assertThat(table.isEmpty(), is(false));
+    }
+
+    @Test
     void toStringEmptyHash() {
         final OpenHashTable<String> table = new OpenHashTable<>();
         assertThat(table.toString(), is(
@@ -35,7 +51,7 @@ public class OpenHashTableTest {
     }
 
     @Test
-    void toStringHashTableWithOneA() {
+    void toStringHashTableAdd() {
         final OpenHashTable<String> table = new OpenHashTable<>();
         assertThat(table.add(SOME_VALUE), is(true));
         assertThat(table.toString(), is(

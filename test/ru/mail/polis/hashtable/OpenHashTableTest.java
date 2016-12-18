@@ -1,6 +1,5 @@
 package ru.mail.polis.hashtable;
 
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -9,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.expectThrows;
 
 public class OpenHashTableTest {
     private static final String SOME_VALUE = "a";
+    private static final String COLLISION_FOR_SOME_VALUE = "i";
     private static final String ANOTHER_VALUE = "b";
 
     @Test
@@ -81,13 +81,14 @@ public class OpenHashTableTest {
         assertThat(table.contains(ANOTHER_VALUE), is(false));
     }
 
-    @Ignore // TODO: 18.12.16
     @Test
     void containsLookSecondPosition() {
         final OpenHashTable<String> table = new OpenHashTable<>();
-        assertThat(table.contains(SOME_VALUE), is(false));
         assertThat(table.add(SOME_VALUE), is(true));
         assertThat(table.contains(SOME_VALUE), is(true));
+        assertThat(table.add(COLLISION_FOR_SOME_VALUE), is(true));
+        assertThat(table.contains(SOME_VALUE), is(true));
+        assertThat(table.contains(COLLISION_FOR_SOME_VALUE), is(true));
     }
 
     @Test
@@ -120,13 +121,13 @@ public class OpenHashTableTest {
         assertThat(table.remove(ANOTHER_VALUE), is(false));
     }
 
-    @Ignore // TODO: 18.12.16
     @Test
     void removeLookSecondPosition() {
         final OpenHashTable<String> table = new OpenHashTable<>();
-        assertThat(table.contains(SOME_VALUE), is(false));
         assertThat(table.add(SOME_VALUE), is(true));
-        assertThat(table.contains(SOME_VALUE), is(true));
+        assertThat(table.add(COLLISION_FOR_SOME_VALUE), is(true));
+        assertThat(table.remove(COLLISION_FOR_SOME_VALUE), is(true));
+        assertThat(table.remove(COLLISION_FOR_SOME_VALUE), is(false));
     }
 
     @Test

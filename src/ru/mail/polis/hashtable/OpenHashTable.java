@@ -36,7 +36,7 @@ public class OpenHashTable<E extends Comparable<E>> implements ISet<E> {
 
         final int h1 = Hash.h1(value);
         final int h2 = Hash.h2(value);
-        int h = h1;
+        int h = (h1) % arr.capacity;
         for (int i = 0; i < arr.capacity; i++) {
             final E v2 = arr.get(h);
             if (v2 == null) {
@@ -60,7 +60,7 @@ public class OpenHashTable<E extends Comparable<E>> implements ISet<E> {
         final int h2 = Hash.h2(value);
         int h = (h1) % arr.capacity;
         for (int i = 0; i < arr.capacity; i++) {
-            if (arr.isFree(i)) {
+            if (arr.isFree(h)) {
                 arr.set(value, h);
                 size++;
                 resize();
@@ -77,7 +77,7 @@ public class OpenHashTable<E extends Comparable<E>> implements ISet<E> {
 
         final int h1 = Hash.h1(value);
         final int h2 = Hash.h2(value);
-        int h = h1;
+        int h = (h1) % arr.capacity;
         for (int i = 0; i < arr.capacity; i++) {
             final E v2 = arr.get(h);
             if (v2 == null) {

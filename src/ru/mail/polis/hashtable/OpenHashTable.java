@@ -6,7 +6,7 @@ import java.util.Comparator;
 
 public class OpenHashTable<E extends Comparable<E>> implements ISet<E> {
     private static final int INITIAL_CAPACITY = 8;
-    private static final float LOAD_FACTOR = 0.5f;
+    private static final float LOAD_FACTOR = 0.5f; // TODO: 18.12.16
 
     private HashArray<E> arr = new HashArray<>(INITIAL_CAPACITY);
     private int size;
@@ -72,6 +72,26 @@ public class OpenHashTable<E extends Comparable<E>> implements ISet<E> {
 
     @Override
     public boolean remove(E value) {
+        if (value == null) {
+            throw new NullPointerException("value is null");
+        }
+
+        final int h1 = Hash.h1(value);
+        final int h2 = Hash.h2(value);
+        int h = h1;
+        for (int i = 0; i < arr.capacity; i++) {
+            final E v2 = arr.get(h);
+            if (v2 == null) {
+                return false;
+            } else {
+                final int cmp = compare(value, v2);
+                if (cmp == 0) {
+                    arr.delete(h);
+                    return true;
+                }
+                h = (h + h2) % arr.capacity;
+            }
+        }
         return false;
     }
 

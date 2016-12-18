@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.expectThrows;
 
 public class OpenHashTableTest {
     private static final String SOME_VALUE = "a";
+    private static final String ANOTHER_VALUE = "b";
 
     @Test
     void create() {
@@ -43,6 +44,13 @@ public class OpenHashTableTest {
         assertThat(table.contains(SOME_VALUE), is(true));
     }
 
+    @Test
+    void containsAnotherValue() {
+        final OpenHashTable<String> table = new OpenHashTable<>();
+        assertThat(table.add(SOME_VALUE), is(true));
+        assertThat(table.contains(ANOTHER_VALUE), is(false));
+    }
+
     @Ignore // TODO: 18.12.16
     @Test
     void containsLookSecondPosition() {
@@ -55,8 +63,40 @@ public class OpenHashTableTest {
     @Test
     void containsNullValue() {
         final OpenHashTable<String> table = new OpenHashTable<>();
-        Throwable exception = expectThrows(NullPointerException.class, () -> table.contains(null));
+        Throwable exception = expectThrows(NullPointerException.class,
+                () -> table.contains(null));
         assertThat(exception.getMessage(), is("value is null"));
+    }
+
+    @Test
+    void remove() {
+        final OpenHashTable<String> table = new OpenHashTable<>();
+        assertThat(table.add(SOME_VALUE), is(true));
+        assertThat(table.remove(SOME_VALUE), is(true));
+    }
+
+    @Test
+    void removeNullValue() {
+        final OpenHashTable<String> table = new OpenHashTable<>();
+        Throwable exception = expectThrows(NullPointerException.class,
+                () -> table.remove(null));
+        assertThat(exception.getMessage(), is("value is null"));
+    }
+
+    @Test
+    void removeAnotherValue() {
+        final OpenHashTable<String> table = new OpenHashTable<>();
+        assertThat(table.add(SOME_VALUE), is(true));
+        assertThat(table.remove(ANOTHER_VALUE), is(false));
+    }
+
+    @Ignore // TODO: 18.12.16
+    @Test
+    void removeLookSecondPosition() {
+        final OpenHashTable<String> table = new OpenHashTable<>();
+        assertThat(table.contains(SOME_VALUE), is(false));
+        assertThat(table.add(SOME_VALUE), is(true));
+        assertThat(table.contains(SOME_VALUE), is(true));
     }
 
     @Test
@@ -93,4 +133,6 @@ public class OpenHashTableTest {
                         + "}"
         ));
     }
+
+
 }

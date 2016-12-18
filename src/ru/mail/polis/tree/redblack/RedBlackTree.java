@@ -120,6 +120,7 @@ public class RedBlackTree<E extends Comparable<E>> implements ISortedSet<E> {
 
         fixUp(z);
 
+        size++;
         return true;
     }
 
@@ -133,7 +134,80 @@ public class RedBlackTree<E extends Comparable<E>> implements ISortedSet<E> {
     }
 
     private void fixUp(Node z) {
-        // TODO: 18.12.16
+        while (!z.p.isBlack) {
+            if (z.p == z.p.p.left) {
+                final Node y = z.p.p.right;
+                if (!y.isBlack) {
+                    z.p.isBlack = true;
+                    y.isBlack = true;
+                    z.p.p.isBlack = false;
+                    z = z.p.p;
+                } else{
+                    if (z == z.p.right){
+                        z = z.p;
+                        rotateLeft(z);
+                    }
+                    z.p.isBlack = true;
+                    z.p.p.isBlack = false;
+                    rotateRight(z);
+                }
+            } else {
+                final Node y = z.p.p.left;
+                if (!y.isBlack) {
+                    z.p.isBlack = true;
+                    y.isBlack = true;
+                    z.p.p.isBlack = false;
+                    z = z.p.p;
+                } else{
+                    if (z == z.p.left){
+                        z = z.p;
+                        rotateRight(z);
+                    }
+                    z.p.isBlack = true;
+                    z.p.p.isBlack = false;
+                    rotateLeft(z);
+                }
+            }
+        }
+        root.isBlack = true;
+    }
+
+    private void rotateLeft(Node x) {
+        final Node y = x.right;
+        x.right = y.left;
+
+        if (!y.left.isNil()) {
+            y.left.p = x;
+        }
+        y.p = x.p;
+        if (x.p.isNil()) {
+            root = y;
+        } else if (x == x.p.left) {
+            x.p.left = y;
+        } else {
+            x.p.right = y;
+        }
+        y.left = x;
+        x.p = y;
+    }
+
+    private void rotateRight(Node x) {
+        final Node y = x.left;
+        x.left = y.right;
+
+        if (!y.right.isNil()) {
+            y.right.p = x;
+        }
+        y.p = x.p;
+        if (x.p.isNil()) {
+            root = y;
+        } else if (x == x.p.right) {
+            x.p.right = y;
+        } else {
+            x.p.left = y;
+        }
+        y.right = x;
+        x.p = y;
     }
 
     class Node {

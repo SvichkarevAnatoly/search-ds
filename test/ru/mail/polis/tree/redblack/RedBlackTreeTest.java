@@ -37,14 +37,6 @@ public class RedBlackTreeTest {
     }
 
     @Test
-    void addSecond() {
-        final RedBlackTree<Integer> tree = new RedBlackTree<>();
-
-        assertThat(tree.add(SOME_NODE), is(true));
-        assertThat(tree.add(ANOTHER_NODE), is(true));
-    }
-
-    @Test
     void contains() {
         final RedBlackTree<Integer> tree = new RedBlackTree<>();
 

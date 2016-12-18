@@ -41,8 +41,6 @@ public class AVLTreeTest {
         assertThat(tree.contains(SOME_NODE), is(true));
         assertThat(tree.first(), is(SOME_NODE));
         assertThat(tree.last(), is(SOME_NODE));
-
-        // assertThat(tree.delete(SOME_NODE), is(true));
     }
 
     @Test

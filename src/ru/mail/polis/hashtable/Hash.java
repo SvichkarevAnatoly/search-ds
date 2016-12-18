@@ -10,9 +10,9 @@ class Hash {
         }
     }
 
-    static <E> int h2(E value) {
+    static <E> int h2(E value, int m) {
         if (String.class.isInstance(value)) {
-            return StringHash.h2((String) value);
+            return StringHash.h2((String) value, m);
         } else {
             throw new UnsupportedOperationException(
                     "Support hash only for String now");

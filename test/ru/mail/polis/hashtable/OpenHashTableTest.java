@@ -2,6 +2,9 @@ package ru.mail.polis.hashtable;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.expectThrows;
@@ -148,13 +151,32 @@ public class OpenHashTableTest {
     }
 
     @Test
-    void toStringHashTableAdd() {
+    void toStringAdd() {
         final OpenHashTable<String> table = new OpenHashTable<>();
         assertThat(table.add(SOME_VALUE), is(true));
         assertThat(table.toString(), is(
                 "OpenHashTable{\n"
                         + "\t0 free\n"
                         + "\t1 " + SOME_VALUE + '\n'
+                        + "\t2 free\n"
+                        + "\t3 free\n"
+                        + "\t4 free\n"
+                        + "\t5 free\n"
+                        + "\t6 free\n"
+                        + "\t7 free\n"
+                        + "}"
+        ));
+    }
+
+    @Test
+    void toStringRemove() {
+        final OpenHashTable<String> table = new OpenHashTable<>();
+        assertThat(table.add(SOME_VALUE), is(true));
+        assertThat(table.remove(SOME_VALUE), is(true));
+        assertThat(table.toString(), is(
+                "OpenHashTable{\n"
+                        + "\t0 free\n"
+                        + "\t1 delete\n"
                         + "\t2 free\n"
                         + "\t3 free\n"
                         + "\t4 free\n"
@@ -196,17 +218,81 @@ public class OpenHashTableTest {
 
     @Test
     void add3andRemoveAll() {
+        final int numberOfValues = 3;
+
         final OpenHashTable<String> table = new OpenHashTable<>();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < numberOfValues; i++) {
             final char charValue= (char) ('a' + i);
             assertThat(table.add(String.valueOf(charValue)), is(true));
         }
-        assertThat(table.size(), is(3));
-        for (int i = 0; i < 3; i++) {
+        assertThat(table.size(), is(numberOfValues));
+        for (int i = 0; i < numberOfValues; i++) {
             final char charValue= (char) ('a' + i);
             assertThat(table.remove(String.valueOf(charValue)), is(true));
         }
         assertThat(table.size(), is(0));
         assertThat(table.isEmpty(), is(true));
+    }
+
+    @Test
+    void add3RandomAndRemoveAll() {
+        final int numberOfValues = 3;
+        assertFullLifeCycle(numberOfValues);
+    }
+
+    @Test
+    void add10RandomAndRemoveAll() {
+        final int numberOfValues = 10;
+        assertFullLifeCycle(numberOfValues);
+    }
+
+    private void assertFullLifeCycle(int numberOfValues) {
+        final RandomString random = new RandomString(0);
+
+        final OpenHashTable<String> table = new OpenHashTable<>();
+        final ArrayList<String> values = new ArrayList<>(numberOfValues);
+        for (int i = 0; i < numberOfValues; i++) {
+            final String value = random.get(10);
+            values.add(value);
+            System.out.println(i);
+            assertThat(table.add(value), is(true));
+        }
+
+        assertThat(table.size(), is(numberOfValues));
+
+        for (String value : values) {
+            assertThat(table.contains(value), is(true));
+        }
+
+        for (String value : values) {
+            assertThat(table.remove(value), is(true));
+        }
+
+        for (String value : values) {
+            assertThat(table.contains(value), is(false));
+        }
+
+        assertThat(table.size(), is(0));
+        assertThat(table.isEmpty(), is(true));
+    }
+
+    static class RandomString{
+        private static final char[] CHARSET_AZ =
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toLowerCase().toCharArray();
+
+        private Random random;
+
+        RandomString(long seed) {
+            random = new Random(seed);
+        }
+
+        String get(int length) {
+            char[] result = new char[length];
+            for (int i = 0; i < result.length; i++) {
+                int randomCharIndex = random.nextInt(CHARSET_AZ.length);
+                result[i] = CHARSET_AZ[randomCharIndex];
+            }
+            return new String(result);
+        }
     }
 }

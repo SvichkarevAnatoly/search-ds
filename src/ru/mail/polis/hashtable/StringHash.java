@@ -9,15 +9,15 @@ class StringHash {
         for (int i = 0; i < s.length(); i++) {
             hash = ALPHABET_SIZE * hash + index(s, i);
         }
-        return hash;
+        return Math.abs(hash);
     }
 
-    static int h2(String s) {
-
+    static int h2(String s, int m) {
         int hash = 0;
         for (int i = 0; i < s.length(); i++) {
             hash += index(s, i);
         }
+        hash = Math.abs(hash) % (m - 1) + 1;
         return hash;
     }
 

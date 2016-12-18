@@ -6,7 +6,7 @@ import java.util.Comparator;
 
 public class OpenHashTable<E extends Comparable<E>> implements ISet<E> {
     private static final int INITIAL_CAPACITY = 8;
-    private static final float LOAD_FACTOR = 0.5f; // TODO: 18.12.16
+    private static final float LOAD_FACTOR = 0.5f;
 
     private HashArray<E> arr = new HashArray<>(INITIAL_CAPACITY);
     private int size;
@@ -35,7 +35,7 @@ public class OpenHashTable<E extends Comparable<E>> implements ISet<E> {
         checkValue(value);
 
         final int h1 = Hash.h1(value);
-        final int h2 = Hash.h2(value);
+        final int h2 = Hash.h2(value, arr.capacity);
         int h = (h1) % arr.capacity;
         for (int i = 0; i < arr.capacity; i++) {
             final E v2 = arr.get(h);
@@ -57,9 +57,9 @@ public class OpenHashTable<E extends Comparable<E>> implements ISet<E> {
         checkValue(value);
 
         final int h1 = Hash.h1(value);
-        final int h2 = Hash.h2(value);
-        int h = (h1) % arr.capacity;
-        for (int i = 0; i < arr.capacity; i++) {
+        final int h2 = Hash.h2(value, arr.capacity);
+        int h = h1 % arr.capacity;
+        while (true) {
             if (arr.isFree(h)) {
                 arr.set(value, h);
                 size++;
@@ -68,7 +68,6 @@ public class OpenHashTable<E extends Comparable<E>> implements ISet<E> {
             }
             h = (h + h2) % arr.capacity;
         }
-        return false;
     }
 
     @Override
@@ -76,13 +75,15 @@ public class OpenHashTable<E extends Comparable<E>> implements ISet<E> {
         checkValue(value);
 
         final int h1 = Hash.h1(value);
-        final int h2 = Hash.h2(value);
+        final int h2 = Hash.h2(value, arr.capacity);
         int h = (h1) % arr.capacity;
         for (int i = 0; i < arr.capacity; i++) {
-            final E v2 = arr.get(h);
-            if (v2 == null) {
+            if (arr.isDelete(h)) {
+                h = (h + h2) % arr.capacity;
+            } else if (arr.isFree(h)){
                 return false;
             } else {
+                final E v2 = arr.get(h);
                 final int cmp = compare(value, v2);
                 if (cmp == 0) {
                     arr.delete(h);
@@ -101,12 +102,14 @@ public class OpenHashTable<E extends Comparable<E>> implements ISet<E> {
         for (int i = 0; i < arr.capacity; i++) {
             sb.append('\t').append(i).append(' ');
             if (arr.isFree(i)) {
-                sb.append("free");
+                if (arr.isDelete(i)) {
+                    sb.append("delete");
+                } else {
+                    sb.append("free");
+                }
             } else if (!arr.isDelete(i)) {
                 final E value = arr.get(i);
                 sb.append(value);
-            } else {
-                sb.append("delete");
             }
             sb.append('\n');
         }
@@ -137,8 +140,22 @@ public class OpenHashTable<E extends Comparable<E>> implements ISet<E> {
         for (int i = 0; i < oldArr.capacity; i++) {
             if (!oldArr.isFree(i)) {
                 final E value = oldArr.get(i);
-                add(value);
+                addWithoutResize(value);
             }
+        }
+    }
+
+    private void addWithoutResize(E value) {
+        final int h1 = Hash.h1(value);
+        final int h2 = Hash.h2(value, arr.capacity);
+        int h = (h1) % arr.capacity;
+        for (int i = 0; i < arr.capacity; i++) {
+            if (arr.isFree(h)) {
+                arr.set(value, h);
+                size++;
+                return;
+            }
+            h = (h + h2) % arr.capacity;
         }
     }
 }

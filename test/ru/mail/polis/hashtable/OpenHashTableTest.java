@@ -155,5 +155,45 @@ public class OpenHashTableTest {
         ));
     }
 
+    @Test
+    void add8Chars() {
+        final OpenHashTable<String> table = new OpenHashTable<>();
+        for (int i = 0; i < 8; i++) {
+            final char charValue= (char) ('a' + i);
+            assertThat(table.add(String.valueOf(charValue)), is(true));
+        }
+        assertThat(table.toString(), is(
+                "OpenHashTable{\n"
+                        + "\t0 h\n"
+                        + "\t1 a\n"
+                        + "\t2 b\n"
+                        + "\t3 c\n"
+                        + "\t4 d\n"
+                        + "\t5 e\n"
+                        + "\t6 f\n"
+                        + "\t7 g\n"
+                        + "}"
+        ));
+    }
 
+    @Test
+    void add9Chars() {
+        final OpenHashTable<String> table = new OpenHashTable<>();
+        for (int i = 0; i < 9; i++) {
+            final char charValue= (char) ('a' + i);
+            assertThat(table.add(String.valueOf(charValue)), is(true));
+        }
+        assertThat(table.toString(), is(
+                "OpenHashTable{\n"
+                        + "\t0 h\n"
+                        + "\t1 a\n"
+                        + "\t2 b\n"
+                        + "\t3 c\n"
+                        + "\t4 d\n"
+                        + "\t5 e\n"
+                        + "\t6 f\n"
+                        + "\t7 g\n"
+                        + "}"
+        ));
+    }
 }

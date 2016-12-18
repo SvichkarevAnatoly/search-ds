@@ -37,6 +37,27 @@ public class OpenHashTableTest {
     }
 
     @Test
+    void add() {
+        final OpenHashTable<String> table = new OpenHashTable<>();
+        assertThat(table.add(SOME_VALUE), is(true));
+    }
+
+    @Test
+    void addNullValue() {
+        final OpenHashTable<String> table = new OpenHashTable<>();
+        Throwable exception = expectThrows(NullPointerException.class,
+                () -> table.add(null));
+        assertThat(exception.getMessage(), is("value is null"));
+    }
+
+    @Test
+    void addTwoValues() {
+        final OpenHashTable<String> table = new OpenHashTable<>();
+        assertThat(table.add(SOME_VALUE), is(true));
+        assertThat(table.add(ANOTHER_VALUE), is(true));
+    }
+
+    @Test
     void contains() {
         final OpenHashTable<String> table = new OpenHashTable<>();
         assertThat(table.contains(SOME_VALUE), is(false));

@@ -32,9 +32,7 @@ public class OpenHashTable<E extends Comparable<E>> implements ISet<E> {
 
     @Override
     public boolean contains(E value) {
-        if (value == null) {
-            throw new NullPointerException("value is null");
-        }
+        checkValue(value);
 
         final int h1 = Hash.h1(value);
         final int h2 = Hash.h2(value);
@@ -56,6 +54,8 @@ public class OpenHashTable<E extends Comparable<E>> implements ISet<E> {
 
     @Override
     public boolean add(E value) {
+        checkValue(value);
+
         final int h1 = Hash.h1(value);
         final int h2 = Hash.h2(value);
         int h = h1;
@@ -72,9 +72,7 @@ public class OpenHashTable<E extends Comparable<E>> implements ISet<E> {
 
     @Override
     public boolean remove(E value) {
-        if (value == null) {
-            throw new NullPointerException("value is null");
-        }
+        checkValue(value);
 
         final int h1 = Hash.h1(value);
         final int h2 = Hash.h2(value);
@@ -118,5 +116,11 @@ public class OpenHashTable<E extends Comparable<E>> implements ISet<E> {
         return comparator == null ?
                 v1.compareTo(v2) :
                 comparator.compare(v1, v2);
+    }
+
+    private void checkValue(E value) {
+        if (value == null) {
+            throw new NullPointerException("value is null");
+        }
     }
 }

@@ -246,6 +246,18 @@ public class OpenHashTableTest {
         assertFullLifeCycle(numberOfValues);
     }
 
+    @Test
+    void add20RandomAndRemoveAll() {
+        final int numberOfValues = 20;
+        assertFullLifeCycle(numberOfValues);
+    }
+
+    @Test
+    void add100RandomAndRemoveAll() {
+        final int numberOfValues = 100;
+        assertFullLifeCycle(numberOfValues);
+    }
+
     private void assertFullLifeCycle(int numberOfValues) {
         final RandomString random = new RandomString(0);
 
@@ -254,7 +266,6 @@ public class OpenHashTableTest {
         for (int i = 0; i < numberOfValues; i++) {
             final String value = random.get(10);
             values.add(value);
-            System.out.println(i);
             assertThat(table.add(value), is(true));
         }
 

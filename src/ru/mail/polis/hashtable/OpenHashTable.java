@@ -136,7 +136,7 @@ public class OpenHashTable<E extends Comparable<E>> implements ISet<E> {
 
         final HashArray<E> oldArr = arr;
         size = 0;
-        arr = new HashArray<>(2 * INITIAL_CAPACITY);
+        arr = new HashArray<>(2 * arr.capacity);
         for (int i = 0; i < oldArr.capacity; i++) {
             if (!oldArr.isFree(i)) {
                 final E value = oldArr.get(i);

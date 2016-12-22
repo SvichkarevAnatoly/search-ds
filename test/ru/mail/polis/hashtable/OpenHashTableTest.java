@@ -217,6 +217,13 @@ public class OpenHashTableTest {
     }
 
     @Test
+    void duplicates() {
+        final OpenHashTable<String> table = new OpenHashTable<>();
+        assertThat(table.add(SOME_VALUE), is(true));
+        assertThat(table.add(SOME_VALUE), is(false));
+    }
+
+    @Test
     void add3andRemoveAll() {
         final int numberOfValues = 3;
 

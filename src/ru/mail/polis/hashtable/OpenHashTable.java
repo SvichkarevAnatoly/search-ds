@@ -65,6 +65,11 @@ public class OpenHashTable<E extends Comparable<E>> implements ISet<E> {
                 size++;
                 resize();
                 return true;
+            } else {
+                final E e = arr.get(h);
+                if (e.equals(value)) {
+                    return false;
+                }
             }
             h = (h + h2) % arr.capacity;
         }
